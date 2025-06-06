@@ -7,12 +7,17 @@ análise e visualização para comparar os modelos criados. Preferencialmente, a
 possível e cada item descrito abaixo deve incluir a análise de diferentes instâncias de acordo com algumas combinações
 dos parâmetros. Para simplificar, vamos considerar apenas redes bidirecionais.
 Para cada modelo de rede gerado nos próximos itens, vocês devem:
+
 • Exibir uma visualização gráfica da rede, usando qualquer pacote disponível: o próprio Matlab, ou Gephi, ou
 NetworkX do Python etc.
+
 • Calcular a distribuição de graus da rede (cálculo e plotagem do histograma com os graus) e identificar padrões.
+
 • Calcular, com um pacote computacional para tratamento de redes, as métricas descritivas das redes analisadas.
+
 Comparem essas medidas e analisem as implicações das distinções em relação ao método de geração de cada
 rede. Pesquisem a respeito dessas medidas e das diferenças encontradas nos modelos.
+
 • As medidas descritivas sugeridas são as seguintes: distribuição de graus (histograma); grau médio, desvio padrão
 dos graus e densidade; caminho médio, diâmetro; número de componentes conectados e tamanho do maior
 componente; coeficiente de clustering (principalmente para avaliar as redes dos itens 2.2 e 2.3: redes de Watts-
@@ -26,8 +31,9 @@ parâmetro e observe (meça e plote) o coeficiente de clustering e o caminho mé
 considerando como base o modelo sem reconexão: você deve perceber que em um certo ponto o caminho
 médio (normalizado) chega a valores muito menores que 1, enquanto o coeficiente de clustering ainda
 permanece alto.
-Introdução à Modelagem || 2025.1 A2-Parte 1 (Cap.3) pág.1/4
+
 PARTE A
+
 Na primeira parte, a ideia é, a partir de diferentes premissas, gerar três modelos distintos de redes e compará-los.
 Item 2.1: Modelo de Erdös-Rényi (rede aleatória)
 No escopo desse trabalho, vamos considerar, para a criação de uma rede de acordo com esse modelo, que a formação de
@@ -52,45 +58,58 @@ comunidade A seja diferente de entre nós da comunidade B e da C, e que a probab
 comunidade A e B seja diferente de entre nós da A e C, e assim por diante. Para que esse modelo possa ser criado, então,
 é necessário definir as comunidades às quais os nós pertencem, assim como essas probabilidades de ligações intra e entre
 comunidades.
+
 Entradas: (i) a quantidade de nós em cada comunidade; (ii) as probabilidades de ligações (idealmente uma matriz 𝐶 × 𝐶,
 onde 𝐶 é a quantidade de comunidades no modelo).
+
 PARTE B
+
 Nessa segunda parte, o propósito é analisar diferentes modelos de crescimento de redes. Para isso, vocês devem considerar
 uma pequena rede inicial e criar funções para a inclusão de novos nós a essa rede. Uma sugestão metodológica é usar uma
 rede pequena (10 nós) completamente conectada, para que todos os nós iniciais tenham a mesma probabilidade de receber
 novas ligações. A diferença entre os modelos é a lógica para ligação dos novos nós.
+
 Item 2.4: Modelo de anexação uniforme
+
 Numa rede com anexação uniforme, todos os nós existentes têm a mesma probabilidade de receber ligações dos novos
 nós. Ou seja, as ligações que serão definidas para o novo nó podem ser direcionadas para qualquer um dos nós
 existentes, com igual probabilidade.
+
 Entradas: (i) a rede inicial; (ii) quantidade de novos nós; e (iii) a quantidade de ligações que um novo nó estabelece com os
 nós existentes ao entrar na rede (deve ser menor que a quantidade de nós existentes na rede inicial). Alternativamente
 (seria muito legal se fizessem), a quantidade de ligações dos novos nós não precisa ser a mesma para todos: o parâmetro
 informado pode ser usado para definir o critério para o sorteio da quantidade de ligações de cada novo nó.
+
 Item 2.5: Modelo de Barabási-Albert (anexação preferencial)
+
 Numa rede com anexação preferencial, a probabilidade de um nó existente receber a ligação de um novo nó, que esteja
 entrando na rede, é proporcional à quantidade de ligações que ele já apresenta antes da entrada desse novo nó.
 Entradas: (i) a rede inicial; (ii) quantidade de novos nós; e (iii) a quantidade de ligações que um novo nó estabelece com os
 nós existentes ao entrar na rede (deve ser menor que a quantidade de nós existentes na rede inicial). Alternativamente
 (seria muito legal se fizessem), a quantidade de ligações dos novos nós não precisa ser a mesma para todos: o parâmetro
 informado pode ser usado para definir o critério para o sorteio da quantidade de ligações de cada novo nó.
+
 Item 2.6: Modelo de Price (anexação preferencial e aleatória)
+
 O modelo de Price é, basicamente, uma combinação dos modelos anteriores: parte das ligações de um novo nó seguirá a
 anexação preferencial, parte delas seguirá a anexação uniforme. A proporção das ligações que vai seguir a anexação
 preferencial é um parâmetro de entrada adicional.
+
 Entradas: (i) a rede inicial; (ii) quantidade de novos nós; (iii) a quantidade de ligações que um novo nó estabelece com os
 nós existentes ao entrar na rede (deve ser menor que a quantidade de nós existentes na rede inicial); e (iv) a proporção das
 novas ligações que seguirá uma anexação preferencial. Também aqui, a quantidade de ligações dos novos nós não precisa
 ser a mesma para todos: o parâmetro informado pode ser usado para definir o critério para o sorteio da quantidade de
 ligações de cada novo nó.
+
 Observação: vocês devem notar que as redes geradas pelo modelo de anexação uniforme seguem uma
 distribuição exponencial de graus, enquanto as redes geradas pelos modelos de Barabási-Albert e de
 Price são redes “livre de escala”, configuradas por leis de potência. Normalmente, o expoente da lei de
 potência relativa a uma rede de anexação preferencial lei é 3, e o expoente de uma rede de Price pode
 variar, dependendo do parâmetro que regula o comportamento das ligações. Façam testes.
+
 Item 2 (30%)
-As figuras a seguir apresentam quatro configurações de redes (Rede A, Rede B, Rede entre si algumas semelhanças. As listas de arestas estão disponíveis no arquivo redes.xlsx.
-C e Rede D), que guardam
+As figuras a seguir apresentam quatro configurações de redes (Rede A, Rede B, C e Rede D) que guardam entre si algumas semelhanças. As listas de arestas estão disponíveis no arquivo redes.xlsx.
+
 Sua tarefa é, utilizando alguma ferramenta de análise de redes de sua preferência (Gephi, Matlab, Python etc.), explicar as
 diferenças observadas nos valores das medidas de centralidade (grau, closeness, betweenness e page rank) dos nós
 1, 2, 5, 9 e 17, comparando cada um deles:
