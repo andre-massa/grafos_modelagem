@@ -36,7 +36,10 @@ Entradas: (i) a quantidade de nós; (ii) a probabilidade de estabelecimento de u
 Item 2.2: Modelo de Watts-Strogatz (“mundo pequeno”)
 Esse modelo começa com a construção de uma rede em anel, regular, em que cada nó se liga a 2𝑘 vizinhos, 𝑘 vizinhos de
 cada lado. Em seguida, cada aresta é submetida a uma probabilidade de ser “redirecionada” para algum dos outros nós da
-rede, formando uma rede que poderia ser ilustrada como na figura abaixo: <img width="628" alt="Screenshot 2025-06-06 at 12 32 25" src="https://github.com/user-attachments/assets/beb80321-bfde-4921-87b3-b12ebfdba6fa" />
+rede, formando uma rede que poderia ser ilustrada como na figura abaixo:
+
+<img width="628" alt="Screenshot 2025-06-06 at 12 32 25" src="https://github.com/user-attachments/assets/beb80321-bfde-4921-87b3-b12ebfdba6fa" />
+
 Entradas: (i) a quantidade de nós; (ii) quantidade de vizinhos (número par) e (iii) a probabilidade de redirecionamento de
 uma aresta.
 Item 2.3: Rede aleatória com comunidades
@@ -93,5 +96,6 @@ diferenças observadas nos valores das medidas de centralidade (grau, closeness,
 1, 2, 5, 9 e 17, comparando cada um deles:
 (a) com os demais nós das redes às quais eles pertencem (de maneira geral), em cada uma das quatro configurações
 (b) com os nós correspondentes a eles nas outras configurações.
+
 <img width="501" alt="Screenshot 2025-06-06 at 12 33 31" src="https://github.com/user-attachments/assets/6836d01e-6c24-41ae-92dc-5696d846669f" />
 
