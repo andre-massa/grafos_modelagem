@@ -2,12 +2,17 @@ import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 def analisar_redes(nome_arquivo='redes.xlsx'):
     """
     Função principal para carregar redes de um arquivo Excel, calcular métricas
-    de centralidade e gerar análises e visualizações.
+    de centralidade e gerar análises e visualizações, salvando todos os
+    resultados em uma pasta dedicada.
     """
+    output_dir = 'resultados'
+    os.makedirs(output_dir, exist_ok=True)
+
     try:
         xls = pd.ExcelFile(nome_arquivo)
     except FileNotFoundError:
@@ -28,11 +33,10 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
             networks[net_name_key] = G
         else:
             print(f"Ignorando a aba: {sheet_name} (não é uma lista de arestas)")
-
     print("Redes carregadas com sucesso.\n")
 
     all_metrics = []
-    network_stats = {} # Para análise intra-rede
+    network_stats = {}
 
     print("--- Calculando Métricas de Centralidade ---")
     for net_name, G in networks.items():
@@ -49,12 +53,9 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
         betweenness = nx.betweenness_centrality(G)
         pagerank = nx.pagerank(G)
         
-        # Guarda as estatísticas de cada métrica para a rede inteira
         network_stats[net_name] = {
-            'Grau': pd.Series(degree),
-            'Proximidade': pd.Series(closeness),
-            'Intermediação': pd.Series(betweenness),
-            'PageRank': pd.Series(pagerank)
+            'Grau': pd.Series(degree), 'Proximidade': pd.Series(closeness),
+            'Intermediação': pd.Series(betweenness), 'PageRank': pd.Series(pagerank)
         }
 
         for node in G.nodes():
@@ -67,40 +68,68 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
 
     metrics_df = pd.DataFrame(all_metrics)
     interest_df = metrics_df[metrics_df['Nó'].isin(nodes_of_interest)].copy()
+    
     pivot_df = interest_df.pivot_table(
         index='Nó', columns='Rede',
         values=['Grau', 'Proximidade', 'Intermediação', 'PageRank']
     )
     pivot_df = pivot_df.reindex(columns=['Grau', 'Proximidade', 'Intermediação', 'PageRank'], level=0)
     
-    # Ordena as colunas das redes para A, B, C, D
     col_order = [('Grau', 'Rede A'), ('Grau', 'Rede B'), ('Grau', 'Rede C'), ('Grau', 'Rede D'),
                  ('Proximidade', 'Rede A'), ('Proximidade', 'Rede B'), ('Proximidade', 'Rede C'), ('Proximidade', 'Rede D'),
                  ('Intermediação', 'Rede A'), ('Intermediação', 'Rede B'), ('Intermediação', 'Rede C'), ('Intermediação', 'Rede D'),
                  ('PageRank', 'Rede A'), ('PageRank', 'Rede B'), ('PageRank', 'Rede C'), ('PageRank', 'Rede D')]
     pivot_df = pivot_df.reindex(columns=col_order)
 
-    print("--- Tabela Comparativa de Centralidades (Nós de Interesse) ---")
-    print(pivot_df.round(4))
-
-    # --- NOVO: Salva a tabela em um arquivo de texto ---
+    print("--- Salvando Arquivos de Saída ---")
+    
+    path_resultados_txt = os.path.join(output_dir, 'resultados.txt')
     try:
-        with open('resultados.txt', 'w') as f:
+        with open(path_resultados_txt, 'w') as f:
             f.write("Tabela Comparativa de Centralidades (Nós de Interesse)\n\n")
             f.write(pivot_df.round(4).to_string())
-        print("\n\n--- AVISO IMPORTANTE ---")
-        print("A tabela também foi salva no arquivo 'resultados.txt'.")
-        print("Para garantir que a formatação não seja perdida, por favor, abra este arquivo e copie e cole o seu conteúdo aqui.")
+        print(f"Tabela de resultados salva em: '{path_resultados_txt}'")
     except Exception as e:
-        print(f"\nNão foi possível salvar o arquivo de resultados: {e}")
+        print(f"\nNão foi possível salvar o arquivo de resultados de texto: {e}")
     
-    # Salva também as estatísticas gerais para a análise
-    writer = pd.ExcelWriter('estatisticas_redes.xlsx')
-    for net_name, stats in network_stats.items():
-        stats_df = pd.DataFrame({metric: s.describe() for metric, s in stats.items()}).round(4)
-        stats_df.to_excel(writer, sheet_name=net_name)
-    writer.close()
+    path_estatisticas_xlsx = os.path.join(output_dir, 'estatisticas_redes.xlsx')
+    try:
+        with pd.ExcelWriter(path_estatisticas_xlsx) as writer:
+            for net_name, stats in network_stats.items():
+                stats_df = pd.DataFrame({metric: s.describe() for metric, s in stats.items()}).round(4)
+                stats_df.to_excel(writer, sheet_name=net_name)
+        print(f"Estatísticas descritivas salvas em: '{path_estatisticas_xlsx}'")
+    except Exception as e:
+        print(f"\nNão foi possível salvar o arquivo de estatísticas: {e}")
+
+    print("\n--- Gerando Gráficos Comparativos ---")
+    plot_df = interest_df.set_index(['Nó', 'Rede'])
+    metrics_to_plot = {
+        'Grau': 'Centralidade de Grau',
+        'Proximidade': 'Centralidade de Proximidade (Closeness)',
+        'Intermediação': 'Centralidade de Intermediação (Betweenness)',
+        'PageRank': 'PageRank'
+    }
+
+    for metric, title in metrics_to_plot.items():
+        fig, ax = plt.subplots(figsize=(12, 7))
+        plot_df[metric].unstack().plot(kind='bar', ax=ax, width=0.8)
+
+        ax.set_title(f'Comparação de {title} para Nós de Interesse', fontsize=16)
+        ax.set_ylabel('Valor da Métrica', fontsize=12)
+        ax.set_xlabel('Nó', fontsize=12)
+        ax.tick_params(axis='x', rotation=0)
+        ax.grid(axis='y', linestyle='--', alpha=0.7)
+        ax.legend(title='Rede')
+        plt.tight_layout()
+        
+        output_filename = f'comparacao_{metric.lower()}.png'
+        path_grafico_png = os.path.join(output_dir, output_filename)
+        plt.savefig(path_grafico_png)
+        print(f"Gráfico salvo como: '{path_grafico_png}'")
+    
+    print("\nProcesso totalmente concluído!")
+
 
 if __name__ == '__main__':
     analisar_redes()
-    
