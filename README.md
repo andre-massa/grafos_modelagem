@@ -1,7 +1,6 @@
 # GraphIgnite
 
-Item 1 (70%)
-Nesse item, tratamos de modelos de geração (PARTE A) e de crescimento (PARTE B) de redes. Basicamente, vocês terão
+Tratamos de modelos de geração e de crescimento de redes. Basicamente, vocês terão
 que criar funções para gerar a estrutura da rede (lista de arestas ou matriz de adjacências) e utilizar algum software de
 análise e visualização para comparar os modelos criados. Preferencialmente, as funções devem ser o mais parametrizadas
 possível e cada item descrito abaixo deve incluir a análise de diferentes instâncias de acordo com algumas combinações
@@ -107,7 +106,6 @@ Price são redes “livre de escala”, configuradas por leis de potência. Norm
 potência relativa a uma rede de anexação preferencial lei é 3, e o expoente de uma rede de Price pode
 variar, dependendo do parâmetro que regula o comportamento das ligações. Façam testes.
 
-Item 2 (30%)
 As figuras a seguir apresentam quatro configurações de redes (Rede A, Rede B, C e Rede D) que guardam entre si algumas semelhanças. As listas de arestas estão disponíveis no arquivo redes.xlsx.
 
 Sua tarefa é, utilizando alguma ferramenta de análise de redes de sua preferência (Gephi, Matlab, Python etc.), explicar as
