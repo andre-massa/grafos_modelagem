@@ -10,8 +10,11 @@ def gerar_rede_watts(n, k, p):
 
 
     for node in range(n):
-        for neighbor in range(1, k//2 + 1):
-            G.add_edge(node, (node + neighbor) % n)
+        for neighbor in range(1, k//2 + 1): 
+            if k % 2 != 0: 
+                print("A quantidade de vizinhos deve ser par.")
+                exit()
+        G.add_edge(node, (node + neighbor) % n)
 
 
     for node in range(n):
