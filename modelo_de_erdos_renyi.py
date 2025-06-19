@@ -17,8 +17,8 @@ def generate_erdos_renyi_network(n, p):
 
 
 try:
-    n = int(input("Digite a quantidade de nós (ex: 100): "))
-    p = float(input("Digite a probabilidade entre 0 e 1 (ex: 0.05): "))
+    n = int(input("Digite a quantidade de nós: "))
+    p = float(input("Digite a probabilidade entre 0 e 1: "))
     if not 0 <= p <= 1:
         raise ValueError("A probabilidade deve estar entre 0 e 1.")
 except ValueError as e:
@@ -29,23 +29,20 @@ except ValueError as e:
 
 G = generate_erdos_renyi_network(n, p)
 
-print("\nGerando visualização do grafo...")
 pos = nx.spring_layout(G, seed=42)
 plt.figure(figsize=(10, 8))
 nx.draw(G, pos, node_size=100, width=0.5, node_color='skyblue', edge_color='gray')
-plt.title(f"Modelo de Erdös-Rényi (n={n}, p={p})", fontsize=16)
+plt.title(f"Modelo de Erdos-Renyi (n={n}, p={p})", fontsize=16)
 plt.show()
 
-print("\n--- Medidas Descritivas ---")
 
 degrees = [d for node, d in G.degree()]
 
-print("\n-- Histograma de Graus --")
 plt.figure(figsize=(10, 6))
 plt.hist(degrees, bins=range(0, max(degrees) + 2), edgecolor='white', alpha=0.8, color='skyblue')
-plt.title("Distribuição de Grau - Erdős-Rényi")
+plt.title("Distribuição de Grau - Erdos-Renyi")
 plt.xlabel("Grau")
-plt.ylabel("Frequência (Nº de Nós)")
+plt.ylabel("Frequência")
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 
@@ -60,8 +57,7 @@ if degrees:
         print(f"Desvio padrão dos graus: {standard_deviation:.2f}")
     else:
         print("Desvio padrão dos graus: N/A (apenas um nó)")
-else:
-    print("\nGrafo não possui nós.")
+
 
 
 print(f"\nDensidade da rede: {nx.density(G):.4f}")
@@ -94,8 +90,6 @@ elif is_connected:
     print(f"Caminho médio: {avg_path:.2f}")
     print(f"Diâmetro: {diameter}")
 
-
-print("\n--- Análise de Hubs ---")
 if len(degrees) > 1:
   
     hub_threshold = average_degree + 2 * standard_deviation
@@ -105,6 +99,6 @@ if len(degrees) > 1:
         print(f"Critério para hub: grau > {hub_threshold:.2f}")
         print(f"Nós identificados como hubs: {hubs}")
     else:
-        print("Nenhum hub identificado com o critério (grau > média + 2 * desvio padrão).")
+        print("Nenhum hub identificado.")
 else:
     print("Análise de hubs não aplicável.")
