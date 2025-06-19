@@ -1,4 +1,4 @@
-# GraphIgnite
+# Grafos_Modelagem
 
 Tratamos de modelos de geração e de crescimento de redes. Basicamente, vocês terão
 que criar funções para gerar a estrutura da rede (lista de arestas ou matriz de adjacências) e utilizar algum software de
