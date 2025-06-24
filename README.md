@@ -6,7 +6,7 @@ Primeiro Semestre de 2025
 
 **Professor:** Walter Wagner Carvalho Sande
 
-**Alunos:** André Massa de Miranda e Henrique Noboru Quiraly 
+**Alunos:** André Massa de Miranda e Henrique Kiraly 
 
 # Objetivo: 
 **O objetivo deste trabalho é discutir ideias e conceitos sobre a análise de grafos relacionados ao estudo de Redes.**
