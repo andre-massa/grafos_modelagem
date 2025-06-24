@@ -5,11 +5,6 @@ import numpy as np
 import os
 
 def analisar_redes(nome_arquivo='redes.xlsx'):
-    """
-    Função principal para carregar redes de um arquivo Excel, calcular métricas
-    de centralidade e gerar análises e visualizações, salvando todos os
-    resultados em uma pasta dedicada.
-    """
     output_dir = 'resultados'
     os.makedirs(output_dir, exist_ok=True)
 
@@ -54,14 +49,14 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
         pagerank = nx.pagerank(G)
         
         network_stats[net_name] = {
-            'Grau': pd.Series(degree), 'Proximidade': pd.Series(closeness),
-            'Intermediação': pd.Series(betweenness), 'PageRank': pd.Series(pagerank)
+            'Grau': pd.Series(degree), 'closness': pd.Series(closeness),
+            'betweenness': pd.Series(betweenness), 'PageRank': pd.Series(pagerank)
         }
 
         for node in G.nodes():
             all_metrics.append({
                 'Rede': net_name, 'Nó': node, 'Grau': degree.get(node, 0),
-                'Proximidade': closeness.get(node, 0), 'Intermediação': betweenness.get(node, 0),
+                'closness': closeness.get(node, 0), 'betweenness': betweenness.get(node, 0),
                 'PageRank': pagerank.get(node, 0)
             })
     print("Métricas calculadas para todas as redes.\n")
@@ -71,13 +66,13 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
     
     pivot_df = interest_df.pivot_table(
         index='Nó', columns='Rede',
-        values=['Grau', 'Proximidade', 'Intermediação', 'PageRank']
+        values=['Grau', 'closness', 'betweenness', 'PageRank']
     )
-    pivot_df = pivot_df.reindex(columns=['Grau', 'Proximidade', 'Intermediação', 'PageRank'], level=0)
+    pivot_df = pivot_df.reindex(columns=['Grau', 'closness', 'betweenness', 'PageRank'], level=0)
     
     col_order = [('Grau', 'Rede A'), ('Grau', 'Rede B'), ('Grau', 'Rede C'), ('Grau', 'Rede D'),
-                 ('Proximidade', 'Rede A'), ('Proximidade', 'Rede B'), ('Proximidade', 'Rede C'), ('Proximidade', 'Rede D'),
-                 ('Intermediação', 'Rede A'), ('Intermediação', 'Rede B'), ('Intermediação', 'Rede C'), ('Intermediação', 'Rede D'),
+                 ('closness', 'Rede A'), ('closness', 'Rede B'), ('closness', 'Rede C'), ('closness', 'Rede D'),
+                 ('betweenness', 'Rede A'), ('betweenness', 'Rede B'), ('betweenness', 'Rede C'), ('betweenness', 'Rede D'),
                  ('PageRank', 'Rede A'), ('PageRank', 'Rede B'), ('PageRank', 'Rede C'), ('PageRank', 'Rede D')]
     pivot_df = pivot_df.reindex(columns=col_order)
 
@@ -106,8 +101,8 @@ def analisar_redes(nome_arquivo='redes.xlsx'):
     plot_df = interest_df.set_index(['Nó', 'Rede'])
     metrics_to_plot = {
         'Grau': 'Centralidade de Grau',
-        'Proximidade': 'Centralidade de Proximidade (Closeness)',
-        'Intermediação': 'Centralidade de Intermediação (Betweenness)',
+        'closness': 'Closness',
+        'betweenness': 'Betweenness',
         'PageRank': 'PageRank'
     }
 
