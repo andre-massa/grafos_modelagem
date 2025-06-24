@@ -1,6 +1,6 @@
 # Trabalho de Introdução à Modelagem Matemática
 
-EMAp - 2025.1
+FGV EMAp - 2025.1
 
 Primeiro Semestre de 2025
 
