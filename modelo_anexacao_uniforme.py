@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import numpy as np
 import random
 import statistics
 import community.community_louvain as community_louvain
