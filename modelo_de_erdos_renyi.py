@@ -2,7 +2,7 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import statistics
-import community as community_louvain
+import community.community_louvain as community_louvain
 
 def generate_erdos_renyi_network(n, p):
     G = nx.Graph()
