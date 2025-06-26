@@ -16,7 +16,7 @@ Composto de 4 tipos de arquivos:
 - Aqueles os quais começam com "modelo", descrevem um programa o qual simula de acordo com as entradas, o modelo com suas características.
 - O arquivo "redes.py" o qual utiliza dados de "redes.xlsx" para gerar-nos análises.
 - O arquivo "redes.xlsx", uma planilha fornecida pelo professor com dados sobre as arestas das redes adotadas.
-- O relatório final constituido de todo nosso aprendizado ao longo do trabalho.
+- O relatório final consolida todo o conhecimento adquirido ao longo do desenvolvimento do trabalho, refletindo nossa trajetória de aprendizado e evolução.
 
 
 
