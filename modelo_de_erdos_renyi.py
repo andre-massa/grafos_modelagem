@@ -2,103 +2,103 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import statistics
-
+import community as community_louvain
 
 def generate_erdos_renyi_network(n, p):
     G = nx.Graph()
-
-    G.add_nodes_from(range(n))
 
     for i in range(n):
         for j in range(i + 1, n):
             if random.random() < p:
                 G.add_edge(i, j)
+
     return G
 
-
-try:
-    n = int(input("Digite a quantidade de nós: "))
-    p = float(input("Digite a probabilidade entre 0 e 1: "))
-    if not 0 <= p <= 1:
-        raise ValueError("A probabilidade deve estar entre 0 e 1.")
-except ValueError as e:
-    print(f"Entrada inválida: {e}")
-    exit()
-
-
+n = int(input("Digite a quantidade de nós: "))
+p = float(input("Digite a probabilidade entre 0 e 1: "))
 
 G = generate_erdos_renyi_network(n, p)
 
+#Grafo
 pos = nx.spring_layout(G, seed=42)
-plt.figure(figsize=(10, 8))
-nx.draw(G, pos, node_size=100, width=0.5, node_color='skyblue', edge_color='gray')
-plt.title(f"Modelo de Erdos-Renyi (n={n}, p={p})", fontsize=16)
+plt.figure(figsize=(8, 6))
+nx.draw(G, pos, node_size=100, with_labels=False)
+plt.title("\n Modelo de Erdös-Rényi")
 plt.show()
 
+print("\n-- Medidas descritivas -- ")
 
-degrees = [d for node, d in G.degree()]
+#Histograma de graus
+print("\n-- Histograma -- ")
 
-plt.figure(figsize=(10, 6))
-plt.hist(degrees, bins=range(0, max(degrees) + 2), edgecolor='white', alpha=0.8, color='skyblue')
-plt.title("Distribuição de Grau - Erdos-Renyi")
+degree = [d for n, d in G.degree()]
+plt.hist(degree, bins=range(0, max(degree) + 2), edgecolor='white')
+plt.title("Distribuição de Grau - Erdős-Rényi")
 plt.xlabel("Grau")
 plt.ylabel("Frequência")
-plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 
+#Grau médio
+average_degree = sum(degree) / len(degree)
+print(f"Grau médio: {average_degree:.2f}")
 
-if degrees: 
-    average_degree = statistics.mean(degrees)
-    print(f"\nGrau médio: {average_degree:.2f}")
-    
- 
-    if len(degrees) > 1:
-        standard_deviation = statistics.stdev(degrees)
-        print(f"Desvio padrão dos graus: {standard_deviation:.2f}")
-    else:
-        print("Desvio padrão dos graus: N/A (apenas um nó)")
+#Desvio padrão
+standard_deviation = statistics.stdev(degree)
+print(f"Desvio padrão: {standard_deviation}")
 
+#Densidade
+density = nx.density(G)
+print(f"Densidade da rede: {density:.4f}")
 
+#Caminho médio
+if nx.is_connected(G):
+  average_path_length= nx.average_shortest_path_length(G)
+  print(f"Caminho médio: {average_path_length:.2f}")
 
-print(f"\nDensidade da rede: {nx.density(G):.4f}")
-print(f"Coeficiente de clustering médio: {nx.average_clustering(G):.4f}")
-
-
-is_connected = nx.is_connected(G)
-num_components = nx.number_connected_components(G)
-print(f"\nA rede é conexa? {'Sim' if is_connected else 'Não'}")
-print(f"Número de componentes conectados: {num_components}")
-
-
-if not is_connected and n > 0:
-   
-    largest_cc_nodes = max(nx.connected_components(G), key=len)
-  
-    largest_cc_subgraph = G.subgraph(largest_cc_nodes)
-    print(f"Tamanho do maior componente: {len(largest_cc_nodes)} nós ({len(largest_cc_nodes)/n:.2%})")
-    
- 
-    avg_path = nx.average_shortest_path_length(largest_cc_subgraph)
-    diameter = nx.diameter(largest_cc_subgraph)
-    print(f"Caminho médio (maior componente): {avg_path:.2f}")
-    print(f"Diâmetro (maior componente): {diameter}")
-elif is_connected:
-   
-    print(f"Tamanho do maior componente: {n} nós (100.00%)")
-    avg_path = nx.average_shortest_path_length(G)
-    diameter = nx.diameter(G)
-    print(f"Caminho médio: {avg_path:.2f}")
-    print(f"Diâmetro: {diameter}")
-
-if len(degrees) > 1:
-  
-    hub_threshold = average_degree + 2 * standard_deviation
-    hubs = [node for node, degree in G.degree() if degree > hub_threshold]
-    
-    if hubs:
-        print(f"Critério para hub: grau > {hub_threshold:.2f}")
-        print(f"Nós identificados como hubs: {hubs}")
-    else:
-        print("Nenhum hub identificado.")
 else:
-    print("Análise de hubs não aplicável.")
+  largest_component = max(nx.connected_components(G), key=len)
+  subgraph = G.subgraph(largest_component)
+  average_path_length= nx.average_shortest_path_length(subgraph)
+  print(f"Rede não conexa. Caminho médio do maior componente: {average_path_length:.2f}")
+
+#Diâmetro
+if nx.is_connected(G):
+  diameter = nx.diameter(G)
+  print(f"Diâmetro: {diameter}")
+
+else:
+  largest_component = max(nx.connected_components(G), key=len)
+  subgraph = G.subgraph(largest_component)
+  diameter = nx.diameter(subgraph)
+  print(f"Rede não conexa. Diâmetro do maior componente: {diameter}")
+
+#Número de componentes conectados e tamanho do maior componente
+if nx.is_connected(G):
+  print(f"Rede conexa. Número de componentes conectados: {nx.number_connected_components(G)}")
+  largest_component = max(nx.connected_components(G), key=len)
+  print(f"Rede conexa. Tamanho do maior componente:{len(largest_component)}")
+
+else:
+  print(f"Rede não conexa. Número de componentes conectados: {nx.number_connected_components(G)}")
+  largest_component = max(nx.connected_components(G), key=len)
+  print(f"Rede não conexa. Tamanho do maior componente: {len(largest_component)}")
+
+#Coeficiente de clustering
+average_clustering = nx.average_clustering(G)
+print(f"Coeficiente de clustering: {average_clustering}")
+
+#Existência de hubs
+avg_degree = statistics.mean(degree)
+std_degree = statistics.stdev(degree)
+threshold = avg_degree + 2 * std_degree
+
+hubs = [n for n, d in G.degree() if d > threshold]
+
+print(f"Hubs encontrados: {hubs}")
+print(f"Número de hubs: {len(hubs)}")
+
+#Modularidade
+partition = community_louvain.best_partition(G)
+modularity = community_louvain.modularity(partition, G)
+
+print(f"Modularidade: {modularity:.4f}")
