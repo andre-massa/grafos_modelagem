@@ -34,9 +34,6 @@ for community_id, size in enumerate(nodes):
 
 total_nodes = len(communities)
 
-#Medidas descritivas
-
-
 for l in range(total_nodes):
     for c in range(l + 1, total_nodes):
         com_l = communities[l]
@@ -52,6 +49,7 @@ plt.figure(figsize=(8, 6))
 nx.draw(G, pos, node_size=50, with_labels=False)
 plt.title("Rede aleatória com comunidades")
 plt.show()
+
 
 #Histograma de graus
 degree = [x for y, x in G.degree()]
